@@ -9,7 +9,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import me.dio.copa.catar.domain.model.MatchDomain
+import me.dio.copa.catar.domain.model.Match
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -32,8 +32,8 @@ class NotificationMatcherWorker(
     }
 
     companion object {
-        fun start(context: Context, match: MatchDomain) {
-            val (id, _, _, team1, team2, matchDate) = match
+        fun start(context: Context, match: Match) {
+            val (id, _,  team1, team2, matchDate) = match
 
             val initialDelay = Duration.between(LocalDateTime.now(), matchDate).minusMinutes(5)
             val inputData = workDataOf(
@@ -49,7 +49,7 @@ class NotificationMatcherWorker(
                 )
         }
 
-        fun cancel(context: Context, match: MatchDomain) {
+        fun cancel(context: Context, match: Match) {
             WorkManager.getInstance(context)
                 .cancelUniqueWork(match.id)
         }

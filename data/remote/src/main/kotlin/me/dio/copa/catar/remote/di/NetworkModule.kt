@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 class NetworkModule {
-    private val url = "https://digitalinnovationone.github.io/copa-2022-android/"
+    private val url = "https://1jgabriel.github.io/matches/"
 
     @Provides
     @Singleton

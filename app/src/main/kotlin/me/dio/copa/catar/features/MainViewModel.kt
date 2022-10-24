@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.dio.copa.catar.core.BaseViewModel
 import me.dio.copa.catar.domain.model.Match
-import me.dio.copa.catar.domain.model.MatchDomain
 import me.dio.copa.catar.domain.usecase.DisableNotificationUseCase
 import me.dio.copa.catar.domain.usecase.EnableNotificationUseCase
 import me.dio.copa.catar.domain.usecase.GetMatchesUseCase
@@ -40,7 +39,7 @@ class MainViewModel @Inject constructor(
                 }
             }.collect { matches ->
                 setState {
-                    copy(matches = matches)
+                    copy(matches = matches.rounds.flatMap { it.matches })
                 }
             }
     }
@@ -65,12 +64,12 @@ class MainViewModel @Inject constructor(
 }
 
 data class MainUiState(
-    val matches: List<MatchDomain> = emptyList()
+    val matches: List<Match> = emptyList()
 )
 
 sealed interface MainUiAction {
     object Unexpected: MainUiAction
     data class MatchesNotFound(val message: String) : MainUiAction
-    data class EnableNotification(val match: MatchDomain) : MainUiAction
-    data class DisableNotification(val match: MatchDomain) : MainUiAction
+    data class EnableNotification(val match: Match) : MainUiAction
+    data class DisableNotification(val match: Match) : MainUiAction
 }

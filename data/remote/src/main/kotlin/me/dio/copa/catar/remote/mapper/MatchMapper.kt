@@ -1,48 +1,34 @@
 package me.dio.copa.catar.remote.mapper
 
-import me.dio.copa.catar.domain.model.MatchDomain
-import me.dio.copa.catar.domain.model.StadiumDomain
-import me.dio.copa.catar.domain.model.Team
+import me.dio.copa.catar.domain.model.*
+import me.dio.copa.catar.remote.model.*
 import me.dio.copa.catar.remote.model.MatchRemote
+import me.dio.copa.catar.remote.model.RoundRemote
 import me.dio.copa.catar.remote.model.StadiumRemote
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
-import java.util.Locale
 
 internal fun List<MatchRemote>.toDomain() = map { it.toDomain() }
 
-fun MatchRemote.toDomain(): MatchDomain {
-    return MatchDomain(
-        id = "$team1-$team2",
-        name = name,
-        team1 = team1.toTeam(),
-        team2 = team2.toTeam(),
-        stadium = stadium.toDomain(),
-        date = date.toLocalDateTime(),
-    )
-}
+@JvmName("toDomainRoundRemote")
+internal fun List<RoundRemote>.toDomain(): List<Round> = map { it.toDomain() }
 
-private fun Date.toLocalDateTime(): LocalDateTime {
-    return toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-}
+fun GroupRemote.toDomain() = Group(rounds = rounds.toDomain())
 
-private fun String.toTeam(): Team {
-    return Team(
-        flag = getTeamFlag(this),
-        displayName = Locale("", this).isO3Country
-    )
-}
+fun RoundRemote.toDomain() = Round(name = name, matches = matches.toDomain())
+fun MatchRemote.toDomain() = Match(
+    id = "$team1-$team2",
+    team1 = team1.toDomain(),
+    team2 = team2.toDomain(),
+    stadium = stadium.toDomain(),
+    date = date.toLocalDateTime(),
+)
 
-private fun getTeamFlag(team: String): String {
-    return team.map {
-        String(Character.toChars(it.code + 127397))
-    }.joinToString("")
-}
+fun TeamRemote.toDomain() = Team(flag = flag, displayName = name)
 
-fun StadiumRemote.toDomain(): StadiumDomain {
-    return StadiumDomain(
-        name = name,
-        image = image
-    )
-}
+private fun Date.toLocalDateTime() = toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+
+fun StadiumRemote.toDomain() = Stadium(
+    name = name,
+    image = image
+)

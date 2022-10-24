@@ -28,14 +28,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import me.dio.copa.catar.R
 import me.dio.copa.catar.domain.extensions.getDate
-import me.dio.copa.catar.domain.model.MatchDomain
-import me.dio.copa.catar.domain.model.TeamDomain
+import me.dio.copa.catar.domain.model.Match
+import me.dio.copa.catar.domain.model.Team
 import me.dio.copa.catar.ui.theme.Shapes
 
-typealias NotificationOnClick = (match: MatchDomain) -> Unit
+typealias NotificationOnClick = (match: Match) -> Unit
 
 @Composable
-fun MainScreen(matches: List<MatchDomain>, onNotificationClick: NotificationOnClick) {
+fun MainScreen(matches: List<Match>, onNotificationClick: NotificationOnClick) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +50,7 @@ fun MainScreen(matches: List<MatchDomain>, onNotificationClick: NotificationOnCl
 }
 
 @Composable
-fun MatchInfo(match: MatchDomain, onNotificationClick: NotificationOnClick) {
+fun MatchInfo(match: Match, onNotificationClick: NotificationOnClick) {
     Card(
         shape = Shapes.large,
         modifier = Modifier.fillMaxWidth()
@@ -73,7 +73,7 @@ fun MatchInfo(match: MatchDomain, onNotificationClick: NotificationOnClick) {
 }
 
 @Composable
-fun Notification(match: MatchDomain, onClick: NotificationOnClick) {
+fun Notification(match: Match, onClick: NotificationOnClick) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
         val drawable = if (match.notificationEnabled) R.drawable.ic_notifications_active
         else R.drawable.ic_notifications
@@ -89,20 +89,20 @@ fun Notification(match: MatchDomain, onClick: NotificationOnClick) {
 }
 
 @Composable
-fun Title(match: MatchDomain) {
+fun Title(match: Match) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "${match.date.getDate()} - ${match.name}",
+            text = "${match.date.getDate()}",
             style = MaterialTheme.typography.h6.copy(color = Color.White)
         )
     }
 }
 
 @Composable
-fun Teams(match: MatchDomain) {
+fun Teams(match: Match) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -116,25 +116,40 @@ fun Teams(match: MatchDomain) {
             style = MaterialTheme.typography.h6.copy(color = Color.White)
         )
 
-        TeamItem(team = match.team2)
+        TeamItem(team = match.team2, true)
     }
 }
 
 @Composable
-fun TeamItem(team: TeamDomain) {
+fun TeamItem(team: Team, isSecondTeam: Boolean = false) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = team.flag,
-            modifier = Modifier.align(Alignment.CenterVertically),
-            style = MaterialTheme.typography.h3.copy(color = Color.White)
-        )
+        if (isSecondTeam) {
+            Text(
+                text = team.displayName,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.h6.copy(color = Color.White)
+            )
 
-        Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.size(16.dp))
 
-        Text(
-            text = team.displayName,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6.copy(color = Color.White)
-        )
+            Text(
+                text = team.flag,
+                modifier = Modifier.align(Alignment.CenterVertically),
+                style = MaterialTheme.typography.h3.copy(color = Color.White)
+            )
+        } else {
+            Text(
+                text = team.flag,
+                modifier = Modifier.align(Alignment.CenterVertically),
+                style = MaterialTheme.typography.h3.copy(color = Color.White)
+            )
+
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                text = team.displayName,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.h6.copy(color = Color.White)
+            )
+        }
     }
 }

@@ -1,6 +1,6 @@
 package me.dio.copa.catar.domain.model
 
-data class Stadium(
+data class Round(
     val name: String,
-    val image: String
+    val matches: List<Match>
 )
