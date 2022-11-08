@@ -5,7 +5,7 @@ import me.dio.copa.catar.domain.model.Group
 import me.dio.copa.catar.domain.model.Match
 
 interface MatchesRepository {
-    suspend fun getMatches(): Flow<Group>
+    suspend fun getMatches(group: String): Flow<Group>
     suspend fun enableNotificationFor(id: String)
     suspend fun disableNotificationFor(id: String)
 }

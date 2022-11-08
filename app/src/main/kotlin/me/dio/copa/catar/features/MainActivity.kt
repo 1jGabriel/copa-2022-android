@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
 import me.dio.copa.catar.extensions.observe
 import me.dio.copa.catar.notification.scheduler.extensions.NotificationMatcherWorker
-import me.dio.copa.catar.ui.theme.Copa2022Theme
+import me.dio.copa.catar.ui.theme.AppTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -19,10 +19,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeActions()
+        viewModel.fetchMatches(GroupEnum.GROUP_G.url)
+
         setContent {
-            Copa2022Theme {
+            AppTheme {
                 val state by viewModel.state.collectAsState()
-                MainScreen(matches = state.matches, viewModel::toggleNotification)
+                GroupScreen(matches = state.matches, viewModel::toggleNotification)
             }
         }
     }
@@ -34,11 +36,10 @@ class MainActivity : ComponentActivity() {
                 MainUiAction.Unexpected -> TODO()
                 is MainUiAction.DisableNotification ->
                     NotificationMatcherWorker.cancel(applicationContext, action.match)
+
                 is MainUiAction.EnableNotification ->
                     NotificationMatcherWorker.start(applicationContext, action.match)
             }
         }
     }
-
-
 }

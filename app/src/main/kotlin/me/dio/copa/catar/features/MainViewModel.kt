@@ -22,18 +22,14 @@ class MainViewModel @Inject constructor(
     private val disableNotificationUseCase: DisableNotificationUseCase,
     private val enableNotificationUseCase: EnableNotificationUseCase,
 ) : BaseViewModel<MainUiState, MainUiAction>(MainUiState()) {
-
-    init {
-        fetchMatches()
-    }
-
-    private fun fetchMatches() = viewModelScope.launch {
-        getMatchesUseCase()
+    fun fetchMatches(group: String) = viewModelScope.launch {
+        getMatchesUseCase(group)
             .flowOn(Dispatchers.Main)
             .catch {
-                when(it) {
+                when (it) {
                     is NotFoundException ->
                         sendAction(MainUiAction.MatchesNotFound(it.message ?: "Erro sem mensagem"))
+
                     is UnexpectedException ->
                         sendAction(MainUiAction.Unexpected)
                 }
@@ -63,12 +59,23 @@ class MainViewModel @Inject constructor(
     }
 }
 
+enum class GroupEnum(val url: String) {
+    GROUP_A("group-a.json"),
+    GROUP_B("group-b.json"),
+    GROUP_C("group-c.json"),
+    GROUP_D("group-d.json"),
+    GROUP_E("group-e.json"),
+    GROUP_F("group-f.json"),
+    GROUP_G("group-g.json"),
+    GROUP_H("group-h.json"),
+}
+
 data class MainUiState(
     val matches: List<Match> = emptyList()
 )
 
 sealed interface MainUiAction {
-    object Unexpected: MainUiAction
+    object Unexpected : MainUiAction
     data class MatchesNotFound(val message: String) : MainUiAction
     data class EnableNotification(val match: Match) : MainUiAction
     data class DisableNotification(val match: Match) : MainUiAction

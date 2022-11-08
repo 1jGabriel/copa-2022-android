@@ -1,11 +1,10 @@
 package me.dio.copa.catar.remote.services
 
 import me.dio.copa.catar.remote.model.GroupRemote
-import me.dio.copa.catar.remote.model.MatchRemote
-import me.dio.copa.catar.remote.model.RoundRemote
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface MatchesServices {
-    @GET("group-a.json")
-    suspend fun getMatches(): GroupRemote
+    @GET("{group}")
+    suspend fun getMatches(@Path("group") group: String): GroupRemote
 }

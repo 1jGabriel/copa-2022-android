@@ -13,8 +13,8 @@ class MatchesRepositoryImpl @Inject constructor(
     private val localDataSource: MatchesDataSource.Local,
     private val remoteDataSource: MatchesDataSource.Remote,
 ) : MatchesRepository {
-    override suspend fun getMatches(): Flow<Group> {
-        return flowOf(remoteDataSource.getMatches())
+    override suspend fun getMatches(group: String): Flow<Group> {
+        return flowOf(remoteDataSource.getMatches(group))
             .combine(
                 localDataSource.getActiveNotificationIds(),
                 transform = { group: Group, ids: Set<String> ->
